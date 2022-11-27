@@ -6,9 +6,9 @@ import cvxpy as cp
 def cvxpy_solve(instance):
     R, A, b = instance
     x = cp.Variable(len(R), integer = True)
-    objective = cp.Maximize(x * R)
+    objective = cp.Maximize(x @ R)
     constraint = A@x <= b
-    problem = cp.Problem(objective, [constraint, 0 <= x])
+    problem = cp.Problem(objective, [constraint])
 
     problem.solve()
 
