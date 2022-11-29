@@ -10,7 +10,9 @@ def cvxpy_solve(instance):
     constraint = A@x <= b
     problem = cp.Problem(objective, [constraint])
 
-    problem.solve()
+    problem.solve(solver=cp.GLPK_MI)
+    # According to wikipedia, the GNU linear programming kit
+    # uses Gomory's mixed integer cuts plus branch and bound.
 
     return x.value
 

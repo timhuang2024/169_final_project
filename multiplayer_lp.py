@@ -21,9 +21,13 @@ def gen_instance(players):
     # \sum_{p,m} u_{p,m} * v_m
     # constraints:
     # (1): \sum_m u{p,m} * i_{r,m} - \sum_{p2} t_{p2, p1, r} <= s_{p1, r}
+    #     (no player overspends their resources)
     # (2): u_{p,m} - \sum_{p2} t_{p2, p1, m} <= s_{p1, m}
+    #     (no player overuses their machines)
     # (3): \sum_m u_{p,m}*v_m >= indv_p (best individual score for that player)
+    #     (each player gains something from having traded - TODO strengthen?)
     # (4): u_{p,m} >= 0
+    #     (players use machines a positive number of times.)
 
     Np = len(players)
     machines = sorted(set(sum([i[0] for i in players],[])))
