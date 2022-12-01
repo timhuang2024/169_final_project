@@ -56,13 +56,26 @@ def gen_instance(players):
 
     limit4 = [0 for v0 in variables if len(v0) == 2]
 
+    # constraint 5: trade is bounded: no trading in infinite loops!
+    # this lets the solver terminate for N = 3, but needless to say, players can 
+    # trade more than 1 resource!
+    # todo fix somehow?
+
+    constraint5 = [[-1 if v == v0 else 0 for v in variables] for v0 in variables if len(v0) == 3]
+
+    limit5 = [1 for v0 in variables if len(v0) == 3]
+
+    constraint6 = [[1 if v == v0 else 0 for v in variables] for v0 in variables if len(v0) == 3]
+
+    limit6 = [1 for v0 in variables if len(v0) == 3]
+
     return (variables, (np.array(objective), 
-            np.matrix(constraint1 + constraint2 + constraint3 + constraint4), 
-            np.array(limit1 + limit2 + limit3 + limit4)))
+            np.matrix(constraint1 + constraint2 + constraint3 + constraint4 + constraint5 + constraint6), 
+            np.array(limit1 + limit2 + limit3 + limit4 + limit5 + limit6)))
 
 if __name__ == '__main__':
     import instance_gen
-    Np = 3
+    Np = 4
     convs = sorted(set(instance_gen.gen_converters(7,7,7)))
     players = [
         (convs,

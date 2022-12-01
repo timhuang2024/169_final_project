@@ -11,7 +11,7 @@ class Genome:
         if genes:
             assert len(genes) == genome_size, "genome size does not match passed in genes!"
         
-    def get_usage_from_genes(self) -> np.ndarray[float]:
+    def get_usage_from_genes(self): #-> np.ndarray(float)
         return np.array([float(gene % 2) for gene in self.__genes])
         
     def compute_score(self, rewards, machine_usage, resources) -> float:
@@ -92,7 +92,7 @@ def mutate(children: typing.List[Genome], mutation_rate: float) -> typing.List[G
         
     return children
 
-def solve_singleplayer_lp_genetic(instance, max_population_size: int, keep_top_k: int, max_iters: int, mutation_rate: float) -> np.ndarray[float]:
+def solve_singleplayer_lp_genetic(instance, max_population_size: int, keep_top_k: int, max_iters: int, mutation_rate: float): #-> np.ndarray[float]
     """genetic algorithm solver for the single player lp. Algorithm adapted from K&W Algorithm 9.4."""
     rewards, machine_usage, resources = instance
     # create an initial population

@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # =================
     # genetic algorithm
     # =================
-    """
+    
     solution = solve_singleplayer_lp_genetic(
         inst, 
         max_population_size=100, 
@@ -53,5 +53,5 @@ if __name__ == '__main__':
         if x:
             print("Used:", convs[i])
     print("Score:",np.dot(solution, inst[0]))
-    """
+    
     # =================
