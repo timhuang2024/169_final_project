@@ -62,32 +62,25 @@ def gen_instance(players):
 
 if __name__ == '__main__':
     import instance_gen
+    Np = 2
     convs = sorted(set(instance_gen.gen_converters(7,7,7)))
-    r_p1 = instance_gen.gen_resources(10)
-    r_p2 = instance_gen.gen_resources(10)
-    (vars,inst) = gen_instance([(convs,r_p1), (convs,r_p2)])
-
-
-
-    p1s= solve_lp.cvxpy_solve(singleplayer_lp.gen_instance(convs,r_p1))
-    p2s = solve_lp.cvxpy_solve(singleplayer_lp.gen_instance(convs,r_p2))
+    players = [
+        (convs,
+         instance_gen.gen_resources(10)) for i in range(Np)]
+    (vars,inst) = gen_instance(players)
 
     soln = solve_lp.cvxpy_solve(inst)
 
     print(soln)
-
-    print(p1s, p2s)
+    for i,p in enumerate(players):
+        p1s = solve_lp.cvxpy_solve(singleplayer_lp.gen_instance(*p))
     
-    print("p1 before: ", singleplayer_opt((convs,r_p1)))
-    for i,x in enumerate(p1s):
-        if x:
-            print("Used:", convs[i],x)
-    print("p2 before: ", singleplayer_opt((convs,r_p2)))
-    for i,x in enumerate(p2s):
-        if x:
-            print("Used:", convs[i],x)
+        print("player",i,"before:", singleplayer_opt(p), p[1])
+        for i,x in enumerate(p1s):
+            if x:
+                print("Used:", convs[i],x)
 
-    scores = [0,0]
+    scores = [0] * Np
     for x,v in zip(soln,vars):
         if len(v) == 2 and x > 0:
             print(v, x)
