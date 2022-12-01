@@ -20,6 +20,7 @@ def cvxpy_solve(instance):
 if __name__ == '__main__':
     import instance_gen
     import singleplayer_lp
+    import converters
     convs = instance_gen.gen_converters(7,7,7)
     ress = instance_gen.gen_resources(10)
 
@@ -27,17 +28,18 @@ if __name__ == '__main__':
     
     
     solution = cvxpy_solve(inst)
-    print(ress)
-    print(solution)
-    for i,x in enumerate(solution):
-        if x:
-            print("Used:", convs[i])
-    print("Score:",np.dot(solution, inst[0]))
+    if solution is not None:
+        print(ress)
+        print(solution)
+        for i,x in enumerate(solution):
+            if x:
+                print("Used:", convs[i])
+        print("Score:",np.dot(solution, inst[0]))
     
     # =================
     # genetic algorithm
     # =================
-    """
+    
     solution = solve_singleplayer_lp_genetic(
         inst, 
         max_population_size=100, 
@@ -46,12 +48,19 @@ if __name__ == '__main__':
         mutation_rate=1 / len(convs)
     )
     print("\nGenetic Algorithm Solution\n")
-    print(ress)
-    print(inst[2])
-    print(solution)
-    for i,x in enumerate(solution):
-        if x:
-            print("Used:", convs[i])
-    print("Score:",np.dot(solution, inst[0]))
-    """
+    if solution is not None:
+        # debug prints
+        print(f"resources: {converters.resource_types}")
+        print(f"resources: {inst[2]}")
+        print(f"solution: {solution}")
+        print(f"used_resources: {inst[1] @ solution}")
+        
+        
+        for i,x in enumerate(solution):
+            if x:
+                print("Used:", convs[i])
+        print("Score:",np.dot(solution, inst[0]))
+    else:
+        print("found no solution...")
+    
     # =================
