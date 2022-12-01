@@ -1,7 +1,7 @@
 #this module contains various approximate integer LP solvers.
 import numpy as np
 import cvxpy as cp
-
+from genetic_algorithm import solve_singleplayer_lp_genetic
 
 def cvxpy_solve(instance):
     R, A, b = instance
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     inst = singleplayer_lp.gen_instance(convs,ress)
     
-
+    
     solution = cvxpy_solve(inst)
     print(ress)
     print(solution)
@@ -33,3 +33,25 @@ if __name__ == '__main__':
         if x:
             print("Used:", convs[i])
     print("Score:",np.dot(solution, inst[0]))
+    
+    # =================
+    # genetic algorithm
+    # =================
+    """
+    solution = solve_singleplayer_lp_genetic(
+        inst, 
+        max_population_size=100, 
+        keep_top_k=20,
+        max_iters=1000,
+        mutation_rate=1 / len(convs)
+    )
+    print("\nGenetic Algorithm Solution\n")
+    print(ress)
+    print(inst[2])
+    print(solution)
+    for i,x in enumerate(solution):
+        if x:
+            print("Used:", convs[i])
+    print("Score:",np.dot(solution, inst[0]))
+    """
+    # =================
