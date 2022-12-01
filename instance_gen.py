@@ -13,4 +13,4 @@ def gen_resources(amount):
 
 def gen_converters(n_t1, n_t2, n_t3):
     #sample some number of converters of each tier level
-    return random.sample(t1_converters,n_t1) + random.sample(t2_converters,n_t2) + random.sample(t3_converters,n_t3)
+    return sorted(random.sample(t1_converters,n_t1) + random.sample(t2_converters,n_t2) + random.sample(t3_converters,n_t3))

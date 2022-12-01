@@ -62,7 +62,7 @@ def gen_instance(players):
 
 if __name__ == '__main__':
     import instance_gen
-    Np = 2
+    Np = 3
     convs = sorted(set(instance_gen.gen_converters(7,7,7)))
     players = [
         (convs,
