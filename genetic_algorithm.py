@@ -19,12 +19,13 @@ class Genome:
         # calculate machine usage from genome: x in { 0.0, 1.0 }
         usage: np.ndarray[float] = self.get_usage_from_genes()
         # compute initial score
-        score: int = usage @ rewards
+        score: int = np.dot(usage, rewards)
         # check constraint violation
-        resource_usage: np.array = machine_usage @ usage
-        for i in range(len(resources)):
-            if resource_usage[0, i] > resources[i]:
-                #print(f"resource_usage={resource_usage[0, i]} > resources={resources[i]}")
+        resource_usage: np.array = np.dot(machine_usage, usage)
+        for i in range(resources.shape[0]):
+            used, max = resource_usage[0, i], resources[i]
+            if used > max:
+                #print(f"resource_usage={resource_usage[i]} > resources={resources[i]}")
                 score = 0
                 break
     
@@ -50,7 +51,7 @@ def selection(population, rewards, machine_usage, resources, keep_top_k: int) ->
     # check for programmer error
     assert keep_top_k <= len(population), "you must keep more than the entire population"
     # score population
-    fittest_pop: typing.List[Genome] = sorted(population, key=lambda x: x.compute_score(rewards, machine_usage, resources))[:keep_top_k]
+    fittest_pop: typing.List[Genome] = sorted(population, reverse=True, key=lambda x: x.compute_score(rewards, machine_usage, resources))[:keep_top_k]
     # compute random parents to be joined
     parent_indices: np.ndarray[int] = np.random.permutation(keep_top_k)
     selected: typing.List[typing.Tuple[Genome, Genome]] = [(fittest_pop[parent_indices[i]], fittest_pop[parent_indices[i + 1]]) for i in range(0, keep_top_k, 2)]
@@ -110,5 +111,7 @@ def solve_singleplayer_lp_genetic(instance, max_population_size: int, keep_top_k
         children = crossover(parents=parents, population_size=max_population_size)
         # mutate
         population = mutate(children, mutation_rate=mutation_rate)
+    print(f"finished {max_iters} iterations")
     
-    return sorted(population, key=lambda x: x.compute_score(rewards, machine_usage, resources))[0].get_usage_from_genes()
+    best: Genome = sorted(population, key=lambda x: x.compute_score(rewards, machine_usage, resources), reverse=True)[0]
+    return best.get_usage_from_genes() if best.compute_score(rewards, machine_usage, resources) > 0 else None
