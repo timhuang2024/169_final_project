@@ -32,7 +32,7 @@ if __name__ == '__main__':
         print(ress)
         print(solution)
         for i,x in enumerate(solution):
-            if x:
+            if x: 
                 print("Used:", convs[i])
         print("Score:",np.dot(solution, inst[0]))
     
